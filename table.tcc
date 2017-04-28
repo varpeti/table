@@ -1,6 +1,6 @@
 // Használat:
 //	t.add(ertek);				Hozzáad a tábla végéhez egy bármilyen típúsú "ertek" elemet. Visszatér: az (int) "id"-vel.
-//	t.set<tipus>(ertek,id);		A tábla (int) "id"-edik "tipus"-ú elemét "ertek"-re változtatja, vagy hozzáadja a lista végéhez. Visszatér: az (int) "id"-vel.
+//	t.set<tipus>(ertek,id);		A tábla (int) "id"-edik "tipus"-ú elemét törli majd "ertek"-re változtatja, vagy hozzáadja a lista végéhez. Visszatér: az (int) "id"-vel.
 //	t.get<tipus>(id);			A tábla (int) "id"-edik "tipus"-ú elemével visszatér.
 //	t.get(ertek,id);			A tábla (int) "id"-edik "ertek" típósának megfelelő elemével visszatér, és "ertek" valtozóba is visszaadja.
 //	t.del<tipus>(id);			A tábla (int) "id"-edik elemét törli "tipus" szerint és minden utána lévő elem id-jét egyel csökkenti. 
@@ -33,11 +33,14 @@ public:
 	template <typename Tr, typename T>
 	int set(T be, int id)
 	{
-		if (id>ertekek.size()-1) {return add(be);} // Ha nagyobb az id mint amennyi elem van: csak hozzáadjuk a végéhez.
-		delete static_cast<Tr*>(ertekek[id]);
 		T *pbe = new T;
 		*pbe = be;
-		ertekek[id]=pbe;
+		if (id>ertekek.size()-1 or id==0) {
+			ertekek.push_back(pbe);
+		} else {
+			delete static_cast<Tr*>(ertekek[id]);
+			ertekek[id]=pbe;
+		}
 		return id;
 	}
 

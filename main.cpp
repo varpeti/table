@@ -35,5 +35,13 @@ int main()
 	t.del<string>(0);
 	cout << t.get(s,0) << endl;
 
+	Stable szam;
+	for (int i = 0; i < 100; ++i)
+	{
+		szam.set<int>(rand()%(i+1),i);
+	}
+	t.add(t); // id=2 | Saját maga
+	t.add(szam); // id=3 | A száz "véletlen" szám.
+
 	return 0;
 }
