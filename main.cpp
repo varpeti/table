@@ -32,14 +32,28 @@ int main()
 
 	s="";i=0;k=Skoord(0,0);
 
-	cout << table_get(t,s,0) << endl;
-	cout << table_get(t,s,1) << endl;
-	cout << table_get(t,i,2) << endl;
-	Skoord g; g = table_get(t,g,3);
+	cout << table_get(t,&s,0) << endl;
+	cout << table_get(t,&s,1) << endl;
+	cout << table_get(t,&i,2) << endl;
+	Skoord g; g = table_get(t,&g,3);
 	cout << g.x << " " << g.y << endl;
 
-	TABLE z; z = table_get(t,z,4);
-	cout << table_get(z,s,0) << endl; //Negyedik elemének az első eleme.
+	TABLE z; z = table_get(t,&z,4);
+	cout << table_get(z,&s,0) << endl; //Negyedik elemének az első eleme.
+
+	s = "szilva";
+	table_set(t,&s,2,&i);
+	s = "";
+	cout << table_get(t,&s,2) << endl;
+
+	table_del(t,1,&s);
+
+	cout << table_get(t,&s,1) << endl;
+
+	i = 999;
+	i = table_set(t,&i,8,&i);
+	cout << table_get(t,&i,i) << endl;
+
 
 
 
