@@ -9,6 +9,11 @@ struct Skoord
 
 	Skoord(double x, double y) : x(x), y(y) {};
 	Skoord(){x=0;y=0;};
+
+	~Skoord()
+	{
+		cout << "RIP Skoord" << endl;
+	}
 	
 };
 
@@ -22,41 +27,35 @@ int main()
 	table_insert(t,4328);
 	table_insert(t,2347.23);
 	table_insert(t,Skoord(10.2,324.5));
-	table_insert(t,t); // Saját maga, de új elemeket nem tartalmaz,
+	table_insert(t,&t); // Fontos hogy a rámutató pointert rakjuk bele, és ne magát. Különben az elemeik (mutatók) megegyezenek de maguk nem.
 
-	cout << "size: "<< t.size() << endl;
-	cout << "0   " <<t[0]->get<string>() << endl;
-	cout << "1   " <<t[1]->get<int>() << endl;
-	cout << "2   " <<t[2]->get<double>() << endl;
-	cout << "3   " <<t[3]->get<Skoord>().x << " " << t[3]->get<Skoord>().y << endl;
-	cout << "4 0 " <<t[4]->get<Table>()[0]->get<string>() << endl;
-	cout << "4 1 " <<t[4]->get<Table>()[1]->get<int>() << "\n\n";
+	cout << "0     " <<t[0]->get<string>() << endl;
+	cout << "1     " <<t[1]->get<int>() << endl;
+	cout << "2     " <<t[2]->get<double>() << endl;
+	cout << "3     " <<t[3]->get<Skoord>().x << "x " << t[3]->get<Skoord>().y << "y " << endl; // 2x RIP Skoord
+	cout << "4 0   " <<t[4]->get<Table*>()->at(0)->get<string>() << endl;
+	cout << "4 1   " <<t[4]->get<Table*>()->at(1)->get<int>() << endl;
+	cout << "4 4 0 " <<t[4]->get<Table*>()->at(4)->get<Table*>()->at(0)->get<string>() << endl;
+	cout << "size: t:"<< t.size() << " t[4]:" << t[4]->get<Table*>()->size() << "\n\n";
 
-	t[3]->set<Skoord>(Skoord(324.5,-10.2));	// alap	módosítás
-	t[4]->get<Table>()[1]->set<int>(987);	// végigfejtés a második fokig és módosítás
-	Table g = t[4]->get<Table>();
-	g[0]->set<string>(string("korte"));	// kifejtés a második fokra és utána modosítás
-	table_insert(g,	"ez a g 4-es");
-	table_insert(t,	"ez a t 5-os");
-	//table_insert(t[4]->get<Table>(),"ez a t 4 4-es"); Ez nem fog működni. Helyette újra berakom a "g"-t a "t"-be.
-	t[4]->set<Table>(g);
+	t[0]->set<string,string>("korte"); 		cout << "\"alma\" - t[0]=\"korte\"" << endl;
+	Table *g = t[4]->get<Table*>();
+	g->at(1)->set<int,string>("szilva"); 	cout << " 4328  - t[4][1]=\"szilva\"" << endl;
+	table_insert(t,'@'); 					cout << " new   : t[5]='@'" << endl;
+	cout << "size: t:"<< t.size() << " t[4]:" << t[4]->get<Table*>()->size() << endl;
+	table_remove<Skoord>(t,3);
+	cout << "size: t:"<< t.size() << " t[3]:" << t[3]->get<Table*>()->size() << "\n\n";
 
-	cout << "size: t:"<< t.size() << " g:" << g.size() << " t[4]:" << t[4]->get<Table>().size() << endl; // egyel kevesebb a "g" mert saját maga már nem adódott magához, és a "t"-hez és a "g"-hez is 1-1 új elemet adtunk.
-	cout << "t 0   " <<t[0]->get<string>() << endl;
-	cout << "t 1   " <<t[1]->get<int>() << endl;
-	cout << "t 2   " <<t[2]->get<double>() << endl;
-	cout << "t 3   " <<t[3]->get<Skoord>().x << " " << t[3]->get<Skoord>().y << endl;
-	cout << "t 4 0 " <<t[4]->get<Table>()[0]->get<string>() << endl;
-	cout << "t 4 1 " <<t[4]->get<Table>()[1]->get<int>() << endl;
-	cout << "g 4   " <<g[4]->get<char*>() << endl;
-	cout << "t 4 4 " <<t[4]->get<Table>()[4]->get<char*>() << endl;
-	cout << "t 5   " <<t[5]->get<char*>() << "\n\n";
-
-
-	table_remove<char*>(g,4); // Ezzel megszűnik a g[4] teljesen és a t[4][4] értéke. (Mivel a g[4] ugyan oda muatatott.) // ez liküszöbölhető még több pointerrel :D
-
-	cout << "size: t:"<< t.size() << " g:" << g.size() << " t[4]:" << t[4]->get<Table>().size() << endl; // a t[4][4]-nek van egy már nem létező ojektumra mutató pointere.
-	cout << "t 5   " <<t[5]->get<char*>() << "\n\n"; // a t[5] maradt.
+	cout << "0     " <<t[0]->get<string>() << endl;
+	cout << "1     " <<t[1]->get<string>() << endl;
+	cout << "2     " <<t[2]->get<double>() << endl;
+	cout << "3 0   " <<t[3]->get<Table*>()->at(0)->get<string>() << endl;
+	cout << "3 1   " <<t[3]->get<Table*>()->at(1)->get<string>() << endl;
+	cout << "3 3 0 " <<t[3]->get<Table*>()->at(3)->get<Table*>()->at(0)->get<string>() << endl;
+	cout << "3 3 4 " <<t[3]->get<Table*>()->at(3)->get<Table*>()->at(4)->get<char>() << endl;
+	cout << "3 4   " <<t[3]->get<Table*>()->at(4)->get<char>() << endl;
+	cout << "4     " <<t[4]->get<char>() << endl;
+	cout << "size: t:"<< t.size() << " t[3]:" << t[3]->get<Table*>()->size() << "\n\n";
 
 	return 0;
 }

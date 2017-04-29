@@ -1,3 +1,14 @@
+// Használat:
+//	Table t; 						-- Új tábla.
+//	Table *g;						-- Új tábla mutató.
+//	table_insert(t,@)				-- Új "@" elem hozzáadása a táblához.
+// 	table_remove<tipus>(t,id)		-- "id" elem törlése ami "tipus" tipusú.
+//	t[id]->	|| g->at(id)->			-- Hivatkozás a "id" elemre.
+//	->get<tipus>()					-- Elem lekérdezése "tipus" szerint.
+//	->get(@)						-- Elem lekérdezése "@" elem tipusa szerint. A "@" értéke megváltozik.
+//	->set<rtipus,utipus>(@)
+//	->set<rtipus>(@)				-- Elem megváltoztatása ami "rtipus"-ú volt. Az "utipus" megegyezik a "@" elem tipusával. Az "utipus" elhagyható.
+
 #ifndef _TABLE_
 #define _TABLE_
 
@@ -64,7 +75,7 @@ template <typename T>
 void table_remove(Table &t,int id)
 {
 	if (id>t.size()-1) return;
-	t[id]->del<T*>();
+	t[id]->del<T>();
 	t.erase(t.begin()+id);
 }
 
